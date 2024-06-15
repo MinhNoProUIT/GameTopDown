@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Spawner : SaiMonoBehaviour
+public abstract class Spawner : MainMonoBehaviour
 {
     [SerializeField] protected Transform holder;
     [SerializeField] protected List<Transform> prefabs;

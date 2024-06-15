@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ParentFly : SaiMonoBehaviour
+public class ParentFly : MainMonoBehaviour
 {
     [SerializeField] protected float moveSpeed = 1f;
     [SerializeField] protected Vector3 direction = Vector3.right;

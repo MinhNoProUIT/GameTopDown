@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class JunkRandom : SaiMonoBehaviour
+public class JunkRandom : MainMonoBehaviour
 {
     [SerializeField] protected JunkCtrl junkCtrl;
 
