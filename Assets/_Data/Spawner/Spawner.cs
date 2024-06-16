@@ -14,6 +14,7 @@ public abstract class Spawner : MainMonoBehaviour
         this.LoadHodler();
     }
 
+    // Ham tim kiem object Holder trong gameObject hien tai
     protected virtual void LoadHodler()
     {
         if (this.holder != null) return;
@@ -21,6 +22,7 @@ public abstract class Spawner : MainMonoBehaviour
         Debug.Log(transform.name + ": LoadHodler", gameObject);
     }
 
+    // Ham load tat ca object co trong object Prefabs
     protected virtual void LoadPrefabs()
     {
         if (this.prefabs.Count > 0) return;
@@ -36,6 +38,7 @@ public abstract class Spawner : MainMonoBehaviour
         Debug.Log(transform.name + ": LoadPrefabs", gameObject);
     }
 
+    // Set gameObject cua prefabs la false
     protected virtual void HidePrefabs()
     {
         foreach(Transform prefab in this.prefabs)
@@ -44,6 +47,7 @@ public abstract class Spawner : MainMonoBehaviour
         }
     }
 
+    // Tao ra doi tuong moi voi ten, vi tri, goc quay
     public virtual Transform Spawn(string prefabName, Vector3 spawnPos,Quaternion rotation)
     {
         Transform prefab = this.GetPrefabByName(prefabName);
@@ -60,11 +64,23 @@ public abstract class Spawner : MainMonoBehaviour
         return newPrefab;
     }
 
+    
+
+    // Them obj can xoa vao poolObj de tai su dung
+    public virtual void Despawn(Transform obj)
+    {
+        this.poolObjs.Add(obj);
+        obj.gameObject.SetActive(false);
+    }
+
+    // Tra ve doi tuong nam trong poolObjs
     protected virtual Transform GetObjectFromPool(Transform prefab)
     {
-        foreach(Transform poolObj in this.poolObjs)
+        //Duyet vong lap, neu prefab truyen vao co trong poolObjs thi tra ve poolObj, neu khong thi tao moi
+        foreach (Transform poolObj in this.poolObjs)
         {
-            if (poolObj.name == prefab.name)  {
+            if (poolObj.name == prefab.name)
+            {
                 this.poolObjs.Remove(poolObj);
                 return poolObj;
             }
@@ -75,12 +91,7 @@ public abstract class Spawner : MainMonoBehaviour
         return newPrefab;
     }
 
-    public virtual void Despawn(Transform obj)
-    {
-        this.poolObjs.Add(obj);
-        obj.gameObject.SetActive(false);
-    }
-
+    // Lay object Prefab tu ten cua prefab duoc truyen vao
     public virtual Transform GetPrefabByName(string prefabName)
     {
         foreach(Transform prefab in this.prefabs)

@@ -38,7 +38,7 @@ public class ShipShooting : MonoBehaviour
 
     protected virtual bool IsShooting()
     {
-        this.isShooting = InputManager.Instance.OnFiring == 1;
+        this.isShooting = InputManager.Instance.getOnFiring() == 1;
         return this.isShooting;
     }
 }

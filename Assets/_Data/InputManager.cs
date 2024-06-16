@@ -11,7 +11,11 @@ public class InputManager : MonoBehaviour
     public Vector3 MouseWorldPos { get => mouseWorldPos; }
 
     [SerializeField] protected float onFiring;
-    public float OnFiring { get => onFiring; }
+    //public float OnFiring { get => onFiring; }
+    public float getOnFiring()
+    {
+        return this.onFiring;
+    }
 
     void Awake()
     {
