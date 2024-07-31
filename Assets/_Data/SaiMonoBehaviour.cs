@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class MainMonoBehaviour : MonoBehaviour
+public abstract class SaiMonoBehaviour : MonoBehaviour
 {
     protected virtual void Awake()
     {
@@ -26,6 +26,16 @@ public class MainMonoBehaviour : MonoBehaviour
     }
 
     protected virtual void ResetValue()
+    {
+        //For override
+    }
+
+    protected virtual void OnEnable()
+    {
+        //For override
+    }
+
+    protected virtual void OnDisable()
     {
         //For override
     }

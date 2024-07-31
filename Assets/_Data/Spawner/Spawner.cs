@@ -2,27 +2,30 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class Spawner : MainMonoBehaviour
+public abstract class Spawner : SaiMonoBehaviour
 {
+    [Header("Spawner")]
     [SerializeField] protected Transform holder;
+
+    [SerializeField] protected int spawnedCount = 0;
+    public int SpawnedCount => spawnedCount;
+
     [SerializeField] protected List<Transform> prefabs;
     [SerializeField] protected List<Transform> poolObjs;
 
     protected override void LoadComponents()
     {
         this.LoadPrefabs();
-        this.LoadHodler();
+        this.LoadHolder();
     }
 
-    // Ham tim kiem object Holder trong gameObject hien tai
-    protected virtual void LoadHodler()
+    protected virtual void LoadHolder()
     {
         if (this.holder != null) return;
         this.holder = transform.Find("Holder");
         Debug.Log(transform.name + ": LoadHodler", gameObject);
     }
 
-    // Ham load tat ca object co trong object Prefabs
     protected virtual void LoadPrefabs()
     {
         if (this.prefabs.Count > 0) return;
@@ -38,7 +41,6 @@ public abstract class Spawner : MainMonoBehaviour
         Debug.Log(transform.name + ": LoadPrefabs", gameObject);
     }
 
-    // Set gameObject cua prefabs la false
     protected virtual void HidePrefabs()
     {
         foreach(Transform prefab in this.prefabs)
@@ -47,7 +49,6 @@ public abstract class Spawner : MainMonoBehaviour
         }
     }
 
-    // Tao ra doi tuong moi voi ten, vi tri, goc quay
     public virtual Transform Spawn(string prefabName, Vector3 spawnPos,Quaternion rotation)
     {
         Transform prefab = this.GetPrefabByName(prefabName);
@@ -57,30 +58,26 @@ public abstract class Spawner : MainMonoBehaviour
             return null;
         }
 
+        return this.Spawn(prefab, spawnPos, rotation);
+    }
+
+    public virtual Transform Spawn(Transform prefab, Vector3 spawnPos, Quaternion rotation)
+    {
         Transform newPrefab = this.GetObjectFromPool(prefab);
         newPrefab.SetPositionAndRotation(spawnPos, rotation);
 
         newPrefab.parent = this.holder;
+        this.spawnedCount++;
         return newPrefab;
     }
 
-    
-
-    // Them obj can xoa vao poolObj de tai su dung
-    public virtual void Despawn(Transform obj)
-    {
-        this.poolObjs.Add(obj);
-        obj.gameObject.SetActive(false);
-    }
-
-    // Tra ve doi tuong nam trong poolObjs
     protected virtual Transform GetObjectFromPool(Transform prefab)
     {
-        //Duyet vong lap, neu prefab truyen vao co trong poolObjs thi tra ve poolObj, neu khong thi tao moi
-        foreach (Transform poolObj in this.poolObjs)
+        foreach(Transform poolObj in this.poolObjs)
         {
-            if (poolObj.name == prefab.name)
-            {
+            if (poolObj == null) continue;
+
+            if (poolObj.name == prefab.name)  {
                 this.poolObjs.Remove(poolObj);
                 return poolObj;
             }
@@ -91,7 +88,13 @@ public abstract class Spawner : MainMonoBehaviour
         return newPrefab;
     }
 
-    // Lay object Prefab tu ten cua prefab duoc truyen vao
+    public virtual void Despawn(Transform obj)
+    {
+        this.poolObjs.Add(obj);
+        obj.gameObject.SetActive(false);
+        this.spawnedCount--;
+    }
+
     public virtual Transform GetPrefabByName(string prefabName)
     {
         foreach(Transform prefab in this.prefabs)
@@ -102,4 +105,9 @@ public abstract class Spawner : MainMonoBehaviour
         return null;
     }
 
+    public virtual Transform RandomPrefab()
+    {
+        int rand = Random.Range(0, this.prefabs.Count);
+        return this.prefabs[rand];
+    }
 }
